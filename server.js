@@ -4,7 +4,7 @@ const server = require("net").createServer(aedes.handle);
 const httpServer = require("http").createServer();
 const ws = require("websocket-stream");
 require("dotenv").config();
-const wsPort = process.env.WSPORT || 1357;
+const wsPort = process.env.WSPORT || 80;
 const port = process.env.PORT || 2468;
 const mongoose = require("mongoose");
 const UserMQTT = require("./model");
