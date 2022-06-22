@@ -1,22 +1,22 @@
 // MQTT Broker
 const aedes = require("aedes")();
-const server = require("net").createServer(aedes.handle);
+// const server = require("net").createServer(aedes.handle);
 const httpServer = require("http").createServer();
 const ws = require("websocket-stream");
 require("dotenv").config();
-const wsPort = process.env.WSPORT || 80;
-const port = process.env.PORT || 2468;
+const port = process.env.PORT || 80;
+// const port = process.env.PORT || 2468;
 const mongoose = require("mongoose");
 const UserMQTT = require("./model");
 
-server.listen(port, function () {
-  console.log("server started and listening on port ", port);
-});
+// server.listen(port, function () {
+//   console.log("server started and listening on port ", port);
+// });
 
 ws.createServer({ server: httpServer }, aedes.handle);
 
-httpServer.listen(wsPort, () => {
-  console.log("websocket server listening on port ", wsPort);
+httpServer.listen(port, () => {
+  console.log("websocket server listening on port ", port);
 });
 
 const connectDB = async (msg) => {
