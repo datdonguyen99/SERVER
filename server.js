@@ -2,10 +2,14 @@
 const aedes = require("aedes")();
 // const server = require("net").createServer(aedes.handle);
 const httpServer = require("http").createServer();
-const ws = require("websocket-stream");
+// const ws = require("websocket-stream");
+require("websocket-stream").createServer(
+  { server: httpServer, path: "/mqtt" },
+  aedes.handle
+);
 require("dotenv").config();
 const port = process.env.PORT || 80;
-// const port = process.env.PORT || 2468;
+// const port = process.env.PORT || 443;
 const mongoose = require("mongoose");
 const UserMQTT = require("./model");
 
@@ -13,7 +17,7 @@ const UserMQTT = require("./model");
 //   console.log("server started and listening on port ", port);
 // });
 
-ws.createServer({ server: httpServer }, aedes.handle);
+// ws.createServer({ server: httpServer }, aedes.handle);
 
 httpServer.listen(port, () => {
   console.log("websocket server listening on port ", port);
