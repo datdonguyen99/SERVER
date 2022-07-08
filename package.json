@@ -1,7 +1,7 @@
 {
-  "name": "server",
+  "name": "thesis",
   "version": "1.0.0",
-  "description": "",
+  "description": "Connect MQTT to HiveMQ cloud ",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,13 +9,8 @@
   "author": "DAT-DO",
   "license": "ISC",
   "dependencies": {
-    "aedes": "^0.47.0",
     "dotenv": "^16.0.1",
-    "http": "^0.0.1-security",
-    "mongoose": "^6.4.0",
-    "websocket-stream": "^5.5.2"
-  },
-  "engines": {
-    "node": "16.x"
+    "mongoose": "^6.4.3",
+    "mqtt": "^4.3.7"
   }
 }

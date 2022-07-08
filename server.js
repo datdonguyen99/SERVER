@@ -1,29 +1,42 @@
-// MQTT Broker
-const aedes = require("aedes")();
-// const server = require("net").createServer(aedes.handle);
-const httpServer = require("http").createServer();
-// const ws = require("websocket-stream");
-require("websocket-stream").createServer(
-  { server: httpServer, path: "/mqtt" },
-  aedes.handle
-);
-require("dotenv").config();
-const port = process.env.PORT || 80;
-// const port = process.env.PORT || 443;
+const mqtt = require("mqtt");
 const mongoose = require("mongoose");
 const UserMQTT = require("./model");
+require("dotenv").config();
 
-// server.listen(port, function () {
-//   console.log("server started and listening on port ", port);
-// });
+const options = {
+  host: "927d7667af91429ba0c6def0efd349db.s1.eu.hivemq.cloud",
+  port: process.env.PORT,
+  protocol: "mqtts",
+  username: "donguyendat",
+  password: "donguyendat",
+};
 
-// ws.createServer({ server: httpServer }, aedes.handle);
+// initialize the MQTT client
+const client = mqtt.connect(options);
+const topic = "TEMPERATURE";
 
-httpServer.listen(port, () => {
-  console.log("websocket server listening on port ", port);
+// setup the callbacks
+client.on("connect", function () {
+  console.log("Connected");
 });
 
-const connectDB = async (msg) => {
+client.on("error", function (error) {
+  console.log(error);
+});
+
+client.on("message", function (topic, message) {
+  // called each time a message is received
+  console.log("Received message:", topic, message.toString());
+  connectDB(topic, message);
+});
+
+// subscribe to topic 'topic'
+client.subscribe(topic);
+
+// publish message 'Hello' to topic 'topic'
+// client.publish("topic", "Hello");
+
+const connectDB = async (topic, message) => {
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
@@ -32,17 +45,11 @@ const connectDB = async (msg) => {
     // console.log("Connected to mongodb successfully!");
     const UserObject = new UserMQTT({
       name: "DATDO",
-      topic: "TEMPERATURE",
-      temperature: msg,
+      topic: topic,
+      temperature: message,
     });
     UserObject.save();
   } catch (err) {
     console.log("Cannot connect to mongoDB", err);
   }
 };
-
-aedes.subscribe("TEMPERATURE", (packet, callback) => {
-  const msg = packet.payload.toString();
-  // console.log(msg);
-  connectDB(msg);
-});
