@@ -10,6 +10,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    day: {
+      type: String,
+      required: true,
+    },
+    time: {
+      type: String,
+      required: true,
+    },
     temperature: {
       type: Number,
       default: 0,

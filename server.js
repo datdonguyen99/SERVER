@@ -13,18 +13,18 @@ const options = {
 
 // initialize the MQTT client
 const client = mqtt.connect(options);
-const topic = "TEMPERATURE";
+const topic = "testTopic";
 
 // setup the callbacks
-client.on("connect", function () {
+client.on("connect", () => {
   console.log("Connected");
 });
 
-client.on("error", function (error) {
+client.on("error", (error) => {
   console.log(error);
 });
 
-client.on("message", function (topic, message) {
+client.on("message", (topic, message) => {
   // called each time a message is received
   console.log("Received message:", topic, message.toString());
   connectDB(topic, message);
@@ -42,11 +42,15 @@ const connectDB = async (topic, message) => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    // console.log("Connected to mongodb successfully!");
+    console.log("Connected to mongodb successfully!");
+    const arrMessage = message.toString().split(/\s/);
     const UserObject = new UserMQTT({
       name: "DATDO",
       topic: topic,
-      temperature: message,
+      day: arrMessage[0],
+      time: arrMessage[1],
+      temperature:
+        arrMessage[2] === "nan" ? Number(-9999) : Number(arrMessage[2]),
     });
     UserObject.save();
   } catch (err) {
